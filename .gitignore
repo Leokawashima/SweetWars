@@ -5,3 +5,5 @@ Assembly-CSharp-Editor.csproj
 SweetWars.sln
 .vs/
 UserSettings/
+Library/
+Logs/

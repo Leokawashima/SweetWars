@@ -15,7 +15,9 @@ public abstract class Attack_Base_SO : ScriptableObject
 
     public virtual void Action()
     {
+#if UNITY_EDITOR
         ExDebug.Log(nameof(this.name) + "のActionが上書きされてないよ", Color.red);
+#endif
     }
 }
 
@@ -34,15 +36,21 @@ public abstract class Skill_Base_SO : ScriptableObject
 
     public virtual void Started()
     {
+#if UNITY_EDITOR
         ExDebug.Log(nameof(this.name) + "のPressedが上書きされてないよ", Color.green);
+#endif
     }
     public virtual void Performed()
     {
+#if UNITY_EDITOR
         ExDebug.Log(nameof(this.name) + "のPerformedが上書きされてないよ", Color.green);
+#endif
     }
     public virtual void Canceled()
     {
+#if UNITY_EDITOR
         ExDebug.Log(nameof(this.name) + "のCanceledが上書きされてないよ", Color.green);
+#endif
     }
 }
 
@@ -53,6 +61,8 @@ public abstract class SPecial_Base_SO : ScriptableObject
 {
     public virtual void Action()
     {
+#if UNITY_EDITOR
         ExDebug.Log(nameof(this.name) + "のActionが上書きされてないよ", Color.blue);
+#endif
     }
 }

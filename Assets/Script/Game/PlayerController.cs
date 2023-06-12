@@ -7,12 +7,10 @@ public class PlayerController : Charactor_Template
     [Header("アタッチ欄")]
     [SerializeField] PlayerManager playerManager;
     [SerializeField] Rigidbody rb;
-    [SerializeField] Animator animator;
     [Header("SO")]
-    [SerializeField] CharaState_SO chara_so;
+    [SerializeField] CharactorState_Data_SO chara_so;
     [SerializeField] AnimState_SO anim_SO;
-    [SerializeField] Skill_Base_SO skill_SO_1;
-    [SerializeField] Skill_Base_SO skill_SO_2;
+    [SerializeField] Animator animator;
     [Header("UI")]
     [SerializeField] GameObject esc_UI;
     [SerializeField] GameObject menu_UI;
@@ -127,44 +125,35 @@ public class PlayerController : Charactor_Template
     //現状のゲーム設計ではスキルは二個までSPは一個までを前提として設計。
     void OnCmd_Attack()
     {
-        Debug.Log("Attack");
-        animator.SetFloat("ActionHash", 0);
-        animator.CrossFade(anim_SO.Anims[1]);
-
-        Ray ray = new Ray(transform.position, transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * 5.0f, Color.red);
-        if(Physics.Raycast(ray, out RaycastHit hit, 5.0f, Ray_Chara_Layer))
-        {
-            Target_Hp_Damage(Attack_Pow, hit.collider.GetComponent<Charactor_Template>());
-        }
+        chara_so.Attack_SO.Action(this);
     }
     void OnCmd_Skill_First_Pressed()
     {
-        skill_SO_1.Started();
+        chara_so.Skill_SO[0].Started(this);
     }
     void OnCmd_Skill_First_Performed()
     {
-        skill_SO_1.Performed();
+        chara_so.Skill_SO[0].Performed(this);
     }
     void OnCmd_Skill_First_Canceled()
     {
-        skill_SO_1.Canceled();
+        chara_so.Skill_SO[0].Canceled(this);
     }
     void OnCmd_Skill_Second_Pressed()
     {
-        skill_SO_2.Started();
+        chara_so.Skill_SO[1].Started(this);
     }
     void OnCmd_Skill_Second_Performed()
     {
-        skill_SO_2.Performed();
+        chara_so.Skill_SO[1].Performed(this);
     }
     void OnCmd_Skill_Second_Canceled()
     {
-        skill_SO_2.Canceled();
+        chara_so.Skill_SO[1].Canceled(this);
     }
     void OnCmd_Special()
     {
-        Debug.Log("Special");
+        chara_so.Special_SO.Action(this);
     }
     #endregion InputSystems
 
@@ -194,7 +183,7 @@ public class PlayerController : Charactor_Template
     #region ComponentIvent
     void Start()
     {
-        Set_CharaStatus(chara_so, rb);
+        Set_CharaStatus(chara_so, rb, animator, anim_SO);
         cameraAngle = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
     }
     void Update()

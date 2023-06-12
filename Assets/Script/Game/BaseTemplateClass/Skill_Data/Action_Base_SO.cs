@@ -3,6 +3,7 @@
 /// <summary>
 /// Attackの抽象基底SO
 /// </summary>
+[System.Serializable]
 public abstract class Attack_Base_SO : ScriptableObject
 {
     public enum AttackTypeState
@@ -13,7 +14,7 @@ public abstract class Attack_Base_SO : ScriptableObject
     }
     public AttackTypeState AttackType;
 
-    public virtual void Action()
+    public virtual void Action(Charactor_Template chara)
     {
 #if UNITY_EDITOR
         ExDebug.Log(nameof(this.name) + "のActionが上書きされてないよ", Color.red);
@@ -24,7 +25,8 @@ public abstract class Attack_Base_SO : ScriptableObject
 /// <summary>
 /// Skillの抽象基底SO
 /// </summary>
-public abstract class Skill_Base_SO : ScriptableObject
+[System.Serializable]
+public abstract class Action_Base_SO : ScriptableObject
 {
     public enum SkillTypeState
     {
@@ -34,19 +36,19 @@ public abstract class Skill_Base_SO : ScriptableObject
     }
     public SkillTypeState EventType;
 
-    public virtual void Started()
+    public virtual void Started(Charactor_Template chara_)
     {
 #if UNITY_EDITOR
         ExDebug.Log(nameof(this.name) + "のPressedが上書きされてないよ", Color.green);
 #endif
     }
-    public virtual void Performed()
+    public virtual void Performed(Charactor_Template chara_)
     {
 #if UNITY_EDITOR
         ExDebug.Log(nameof(this.name) + "のPerformedが上書きされてないよ", Color.green);
 #endif
     }
-    public virtual void Canceled()
+    public virtual void Canceled(Charactor_Template chara_)
     {
 #if UNITY_EDITOR
         ExDebug.Log(nameof(this.name) + "のCanceledが上書きされてないよ", Color.green);
@@ -57,9 +59,10 @@ public abstract class Skill_Base_SO : ScriptableObject
 /// <summary>
 /// Specialの抽象基底SO
 /// </summary>
-public abstract class SPecial_Base_SO : ScriptableObject
+[System.Serializable]
+public abstract class Special_Base_SO : ScriptableObject
 {
-    public virtual void Action()
+    public virtual void Action(Charactor_Template chara_)
     {
 #if UNITY_EDITOR
         ExDebug.Log(nameof(this.name) + "のActionが上書きされてないよ", Color.blue);

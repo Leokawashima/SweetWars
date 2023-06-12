@@ -13,7 +13,6 @@ public abstract class DynamicObject_Base : MonoBehaviour
     public string Name { get; protected set; }
     public float Hp { get; protected set; }
     public float Hp_Max { get; protected set; }
-    public float Speed { get; protected set; }
 
     public Vector3 Position { get { return transform.position; } }
 

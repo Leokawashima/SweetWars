@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 [CreateAssetMenu(menuName = "Skill_P_PowerAttack")]
 public class Skill_Pressed_PowerAttack : Skill_Pressed_Template
 {
-    public override void Started()
+    public override void Started(Charactor_Template chara_)
     {
 #if UNITY_EDITOR
         ExDebug.Log(this.ToString() + "::" + CoolDownTime, Color.red);

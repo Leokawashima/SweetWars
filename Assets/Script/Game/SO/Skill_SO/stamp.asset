@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3a505fdb68783f4b89e7e4d5e4f78a2, type: 3}
-  m_Name: 23
+  m_Script: {fileID: 11500000, guid: ec00968d5b5e53a4f8efbfbdec34d630, type: 3}
+  m_Name: stamp
   m_EditorClassIdentifier: 
-  IventType: 0
   CoolDownTime: 0

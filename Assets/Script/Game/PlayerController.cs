@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerController : Charactor_Template
 {
@@ -16,7 +15,7 @@ public class PlayerController : Charactor_Template
     [SerializeField] GameObject menu_UI;
     [SerializeField] GameObject forcus_UI;
     [Header("速度")]
-    private const float dashSpeed = 1.8f;
+    const float dashSpeed = 1.8f;
 
     Quaternion cameraAngle = Quaternion.identity;
 
@@ -153,6 +152,8 @@ public class PlayerController : Charactor_Template
     #region Function
     void AnimSet_Move()
     {
+        //アニメーションを割り当てるための仮実装
+        //後々アニメーションのハッシュを取得して綺麗に整える
         float hash = 0;
         float speed = 0;
         if(playerManager.InputStatus[(int)PlayerManager.InputState.Move])
@@ -170,19 +171,7 @@ public class PlayerController : Charactor_Template
         animator.SetFloat("Move", hash);
         animator.SetFloat("Speed", speed);
     }
-    public override void Hp_NoLife()
-    {
-        Destroy(gameObject);
-    }
-    #endregion Function
-
-    #region ComponentIvent
-    void Start()
-    {
-        Set_CharaStatus(chara_so, rb, animator, anim_SO);
-        cameraAngle = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
-    }
-    void Update()
+    void Move()
     {
         var velocity = cameraAngle * playerManager.MoveToVec3.normalized;
         var moveSpeed = playerManager.InputStatus[(int)PlayerManager.InputState.Sprint] ? dashSpeed : 1;
@@ -196,6 +185,22 @@ public class PlayerController : Charactor_Template
             var targetRot = Quaternion.Euler(0, mDisaire, 0);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, RotSpeed * Time.deltaTime);
         }
+    }
+    public override void Hp_NoLife()
+    {
+        Destroy(gameObject);
+    }
+    #endregion Function
+
+    #region ComponentIvent
+    void Start()
+    {
+        Set_CharaStatus(chara_so, rb, animator, anim_SO, Move);
+        cameraAngle = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
+    }
+    void Update()
+    {
+        CharaUpdate();
     }
     #endregion
 }

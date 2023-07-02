@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class PatrollEnemy : Enemys_Template
@@ -17,7 +15,7 @@ public class PatrollEnemy : Enemys_Template
 
     void Start()
     {
-        Set_CharaStatus(so, rb, animator, anim_so);
+        Set_CharaStatus(so, rb, animator, anim_so, Def_Update);
 
         col = GetComponent<CapsuleCollider>();
         nav = GetComponent<NavMeshAgent>();
@@ -27,12 +25,15 @@ public class PatrollEnemy : Enemys_Template
         nav.radius = col.radius;
         nav.height = col.height;
     }
-
     void Update()
+    {
+        CharaUpdate();
+    }
+    void Def_Update()
     {
         if(Target_Attack)
         {
-            if (Check_Look_Angle(angle))
+            if(Check_Look_Angle(angle))
             {
                 Look_Target_Range(distance);
                 nav.SetDestination(Target_Attack.transform.position);

@@ -19,6 +19,9 @@ public abstract class Charactor_Template : DynamicObject_Base
     public Animator CharaAnim { get; private set; }
     public AnimState_SO Anim_SO { get; private set; }
 
+    public delegate void CharactorUpdate();
+    public CharactorUpdate CharaUpdate { get; private set; }
+
     #region ゲッター＆定数
     public const float RotSpeed = 25;
     public static int Ray_Chara_Layer { get { return 1 << 11; } }
@@ -43,7 +46,9 @@ public abstract class Charactor_Template : DynamicObject_Base
     }
 
     //Charactor_Dataクラスに変えてデータをセットする
-    public void Set_CharaStatus(CharactorState_Data_SO chara_so_, Rigidbody rb_, Animator anim_, AnimState_SO anim_SO_)
+    public void Set_CharaStatus(
+        CharactorState_Data_SO chara_so_, Rigidbody rb_, Animator anim_, AnimState_SO anim_SO_,
+        CharactorUpdate update_)
     {
         this.CharaState = chara_so_;
         this.Name = chara_so_.Name;
@@ -52,10 +57,14 @@ public abstract class Charactor_Template : DynamicObject_Base
         this.Hp_Max = chara_so_.Hp;
         this.CharaAnim = anim_;
         this.Anim_SO = anim_SO_;
+        this.CharaUpdate = update_;
         //ボスの第二形態等を想定してデータセットしたときはバフをリセットさせる
         this.Buff_Reset();
     }
-
+    public void Set_CharaUpdate(CharactorUpdate update_)
+    {
+        CharaUpdate = update_;
+    }
     //オーバーロードしないで関数名で明示する
     //完全個人製作で誰も見ないソースならオーバーロードするかも
     public void Target_Hp_Damage(float pow_, DynamicObject_Base target_)
@@ -102,38 +111,17 @@ public abstract class Charactor_Template : DynamicObject_Base
         this.Buff_Critical_Chance *= buff_;
     }
 
-    public void Rb_Move(float x_, float z_)
-    {
-        Rb.velocity = new Vector3(x_ * CharaState.Speed, Rb.velocity.y, z_ * CharaState.Speed);
-    }
-    public void Rb_Move(float x_, float z_, float mulSpeed_)
-    {
-        Rb.velocity = new Vector3(x_ * CharaState.Speed * mulSpeed_, Rb.velocity.y, z_ * CharaState.Speed * mulSpeed_);
-    }
     public void Rb_Move(Vector2 vec2_)
     {
         Rb.velocity = new Vector3(vec2_.x * CharaState.Speed, Rb.velocity.y, vec2_.y * CharaState.Speed);
-    }
-    public void Rb_Move(Vector2 vec2_, float mulSpeed_)
-    {
-        Rb.velocity = new Vector3(vec2_.x * CharaState.Speed * mulSpeed_, Rb.velocity.y, vec2_.y * CharaState.Speed * mulSpeed_);
     }
     public void Rb_Move(Vector3 vec3_)
     {
         Rb.velocity = new Vector3(vec3_.x * CharaState.Speed, Rb.velocity.y, vec3_.z * CharaState.Speed);
     }
-    public void Rb_Move(Vector3 vec3_, float mulSpeed_)
+    public void Rb_Move_3Dim(Vector3 vec3_)
     {
-        Rb.velocity = new Vector3(vec3_.x * CharaState.Speed * mulSpeed_, Rb.velocity.y, vec3_.z * CharaState.Speed * mulSpeed_);
-    }
 
-    public void Rb_Move_Impulse(float x_, float z_, float pow_)
-    {
-        Rb.AddForce(new Vector3(x_, 0, z_) * pow_, ForceMode.Impulse);
-    }
-    public void Rb_Move_Impulse(Vector2 vec2_, float pow_)
-    {
-        Rb.AddForce(new Vector3(vec2_.x, 0, vec2_.y) * pow_, ForceMode.Impulse);
     }
     public void Rb_Move_Impulse(Vector3 vec3_, float pow_)
     {

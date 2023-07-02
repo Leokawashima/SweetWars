@@ -180,4 +180,9 @@ public abstract class Charactor_Template : DynamicObject_Base
             }
         }
     }
+
+    public bool Check_Look_Angle(float angle_)
+    {
+        return (Vector3.Angle(this.transform.forward, Target_Angle(Target_Attack)) < angle_);
+    }
 }

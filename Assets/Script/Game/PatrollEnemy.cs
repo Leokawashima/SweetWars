@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PatrollEnemy : Enemys_Template
 {
@@ -11,16 +12,31 @@ public class PatrollEnemy : Enemys_Template
     [SerializeField] float distance = 10.0f;
     [SerializeField] float angle = 50.0f;
 
+    CapsuleCollider col;
+    NavMeshAgent nav;
+
     void Start()
     {
         Set_CharaStatus(so, rb, animator, anim_so);
+
+        col = GetComponent<CapsuleCollider>();
+        nav = GetComponent<NavMeshAgent>();
+        nav.speed = so.Speed;
+        nav.angularSpeed = RotSpeed;
+        nav.baseOffset = col.height / 2.0f * transform.lossyScale.y;
+        nav.radius = col.radius;
+        nav.height = col.height;
     }
 
     void Update()
     {
         if(Target_Attack)
         {
-            Look_Target_Range_Angle(distance, angle);
+            if (Check_Look_Angle(angle))
+            {
+                Look_Target_Range(distance);
+                nav.SetDestination(Target_Attack.transform.position);
+            }
         }
     }
 

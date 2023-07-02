@@ -116,13 +116,6 @@ public class PlayerController : Charactor_Template
         forcus_UI.SetActive(!forcus_UI.activeSelf);
     }
 
-    //ここら辺をCharaFormatで抽象定義して敵と共通化しなかった理由は、
-    //設計上敵はボス含め複数のスキル、必殺技を持つ可能性があること。
-    //プレイヤは基本的にゲーム開始時に持ち込むスキル等は固定されていて数が上限しないこと。
-    //仮に複数必殺や複数スキルを持たせるのならボタンやキー配置の都合上かなり難儀になる可能性があり、
-    //スキルをそこまで持てる場合キャラチョイスによる差を設けることが難しいこと。
-    //以上が挙げられる。　基本的に技や必殺はアセット管理するので結局やろうと思えば大体全部親クラスに纏まるが、
-    //現状のゲーム設計ではスキルは二個までSPは一個までを前提として設計。
     void OnCmd_Attack()
     {
         chara_so.Attack_SO.Action(this);
@@ -161,18 +154,21 @@ public class PlayerController : Charactor_Template
     void AnimSet_Move()
     {
         float hash = 0;
+        float speed = 0;
         if(playerManager.InputStatus[(int)PlayerManager.InputState.Move])
         {
+            hash = 1;
             if(playerManager.InputStatus[(int)PlayerManager.InputState.Sprint])
             {
-                hash = 1;
+                speed = 2;
             }
             else
             {
-                hash = 0.5f;
+                speed = 1;
             }
         }
         animator.SetFloat("Move", hash);
+        animator.SetFloat("Speed", speed);
     }
     public override void Hp_NoLife()
     {

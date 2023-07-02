@@ -32,7 +32,7 @@ public class PatrollEnemy : Enemys_Template
     }
     private void OnTriggerExit(Collider other)
     {
-        if(other.gameObject == Target_Attack.gameObject)
+        if(other.GetComponent<PlayerController>() == Target_Attack)
             Target_Attack = null;
     }
 

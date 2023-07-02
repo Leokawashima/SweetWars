@@ -127,72 +127,26 @@ public abstract class Charactor_Template : DynamicObject_Base
         Rb.velocity = new Vector3(vec3_.x * CharaState.Speed * mulSpeed_, Rb.velocity.y, vec3_.z * CharaState.Speed * mulSpeed_);
     }
 
-    public void Rb_Move_Orizin(float x_, float z_)
+    public void Rb_Move_Impulse(float x_, float z_, float pow_)
     {
-        Rb.velocity = new Vector3(x_, Rb.velocity.y, z_);
+        Rb.AddForce(new Vector3(x_, 0, z_) * pow_, ForceMode.Impulse);
     }
-    public void Rb_Move_Orizin(float x_, float z_, float speed_)
+    public void Rb_Move_Impulse(Vector2 vec2_, float pow_)
     {
-        Rb.velocity = new Vector3(x_ * speed_, Rb.velocity.y, z_ * speed_);
+        Rb.AddForce(new Vector3(vec2_.x, 0, vec2_.y) * pow_, ForceMode.Impulse);
     }
-    public void Rb_Move_Orizin(Vector2 vec2_)
+    public void Rb_Move_Impulse(Vector3 vec3_, float pow_)
     {
-        Rb.velocity = new Vector3(vec2_.x, Rb.velocity.y, vec2_.y);
-    }
-    public void Rb_Move_Orizin(Vector2 vec2_, float speed_)
-    {
-        Rb.velocity = new Vector3(vec2_.x * speed_, Rb.velocity.y, vec2_.y * speed_);
-    }
-    public void Rb_Move_Orizin(Vector3 vec3_)
-    {
-        Rb.velocity = new Vector3(vec3_.x, Rb.velocity.y, vec3_.z);
-    }
-    public void Rb_Move_Orizin(Vector3 vec3_, float speed_)
-    {
-        Rb.velocity = new Vector3(vec3_.x * speed_, Rb.velocity.y, vec3_.z * speed_);
-    }
-
-    public void Rb_Move_3Dim(float x_, float y_, float z_)
-    {
-        Rb.velocity = new Vector3(x_ * CharaState.Speed, y_ * CharaState.Speed, z_ * CharaState.Speed);
-    }
-    public void Rb_Move_3Dim(float x_, float y_, float z_, float mulSpeed_)
-    {
-        Rb.velocity = new Vector3(x_ * CharaState.Speed * mulSpeed_, y_ * CharaState.Speed * mulSpeed_, z_ * CharaState.Speed * mulSpeed_);
-    }
-    public void Rb_Move_3Dim(Vector3 vec3_)
-    {
-        Rb.velocity = vec3_ * CharaState.Speed;
-    }
-    public void Rb_Move_3Dim(Vector3 vec3_, float mulSpeed_)
-    {
-        Rb.velocity = vec3_ * CharaState.Speed * mulSpeed_;
-    }
-
-    public void Rb_Move_3Dim_Orizin(float x_, float y_, float z_)
-    {
-        Rb.velocity = new Vector3(x_, y_, z_);
-    }
-    public void Rb_Move_3Dim_Orizin(float x_, float y_, float z_, float speed_)
-    {
-        Rb.velocity = new Vector3(x_ * speed_, y_ * speed_, z_ * speed_);
-    }
-    public void Rb_Move_3Dim_Orizin(Vector3 vec3_)
-    {
-        Rb.velocity = vec3_;
-    }
-    public void Rb_Move_3Dim_Orizin(Vector3 vec3_, float speed_)
-    {
-        Rb.velocity = vec3_ * speed_;
+        Rb.AddForce(vec3_ * pow_, ForceMode.Impulse);
     }
 
     public void Look_Dir_AllReady(Vector3 dir_)
     {
         transform.rotation = Quaternion.LookRotation(dir_, Vector3.up);
     }
-    public void Look_Dir_MoveOnly(Vector3 dir_, Vector3 moveVec3_)
+    public void Look_Dir_MoveOnly(Vector3 dir_, Vector3 move_)
     {
-        if (moveVec3_.magnitude != 0)
+        if (move_.magnitude != 0)
         {
             transform.rotation = Quaternion.LookRotation(dir_, Vector3.up);
         }
@@ -201,24 +155,24 @@ public abstract class Charactor_Template : DynamicObject_Base
     {
         transform.rotation = Quaternion.LookRotation(Target_Angle(Target_Attack), Vector3.up);
     }
-    public void Look_Target_MoveOnly(Vector3 moveVec3_)
+    public void Look_Target_MoveOnly(Vector3 move_)
     {
-        if (moveVec3_.magnitude != 0)
+        if (move_.magnitude != 0)
         {
             this.transform.rotation = Quaternion.LookRotation(Target_Angle(Target_Attack), Vector3.up);
         }
     }
 
-    public void Look_Target_Range(float distance_)
+    public void Look_Target_Range(float dist_)
     {
-        if(Target_Distance(Target_Attack) <= distance_)
+        if(Target_Distance(Target_Attack) <= dist_)
         {
             transform.rotation = Quaternion.LookRotation(Target_Angle(Target_Attack), Vector3.up);
         }
     }
-    public void Look_Target_Range_Angle(float distance_, float angle_)
+    public void Look_Target_Range_Angle(float dist_, float angle_)
     {
-        if (Target_Distance(Target_Attack) <= distance_)
+        if (Target_Distance(Target_Attack) <= dist_)
         {
             if (Vector3.Angle(this.transform.forward, Target_Angle(Target_Attack)) < angle_)
             {

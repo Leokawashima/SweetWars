@@ -23,4 +23,4 @@ MonoBehaviour:
   Skill_SO:
   - {fileID: 11400000, guid: f9588c318a7b14a41b341179cfe77f71, type: 2}
   - {fileID: 11400000, guid: 3d2635aefa7fb834082ff448bfccb3ed, type: 2}
-  Special_SO: {fileID: 0}
+  Special_SO: {fileID: 11400000, guid: b7e1bd9998f3cf04cbb0d315d14d31ae, type: 2}

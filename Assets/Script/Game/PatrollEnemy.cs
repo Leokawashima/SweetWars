@@ -15,7 +15,7 @@ public class PatrollEnemy : Enemys_Template
 
     void Start()
     {
-        Set_CharaStatus(so, rb, animator, anim_so, Def_Update);
+        Set_CharaStatus(so, rb, animator, anim_so, Def_Update, Def_CallBack);
 
         col = GetComponent<CapsuleCollider>();
         nav = GetComponent<NavMeshAgent>();
@@ -27,9 +27,9 @@ public class PatrollEnemy : Enemys_Template
     }
     void Update()
     {
-        CharaUpdate();
+        CharaUpdate(this);
     }
-    void Def_Update()
+    void Def_Update(Charactor_Template chara_)
     {
         if(Target_Attack)
         {
@@ -39,6 +39,10 @@ public class PatrollEnemy : Enemys_Template
                 nav.SetDestination(Target_Attack.transform.position);
             }
         }
+    }
+    void Def_CallBack(Charactor_Template chara_)
+    {
+
     }
 
     private void OnTriggerEnter(Collider other)

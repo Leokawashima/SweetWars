@@ -22,5 +22,5 @@ MonoBehaviour:
   Attack_SO: {fileID: 11400000, guid: 4ff870dcf5d8e2141a21f3c0e1f7b468, type: 2}
   Skill_SO:
   - {fileID: 11400000, guid: f9588c318a7b14a41b341179cfe77f71, type: 2}
-  - {fileID: 11400000, guid: 3d2635aefa7fb834082ff448bfccb3ed, type: 2}
+  - {fileID: 11400000, guid: 46be06f87d179004da40d5b6837b8ac5, type: 2}
   Special_SO: {fileID: 11400000, guid: b7e1bd9998f3cf04cbb0d315d14d31ae, type: 2}

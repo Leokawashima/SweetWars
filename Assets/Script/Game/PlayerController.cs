@@ -68,7 +68,6 @@ public class PlayerController : Charactor_Template
     }
     void OnMove_Started()
     {
-        AnimSet_Move();
     }
     //↓中身ナシ
     void OnMove_Performed()
@@ -77,7 +76,6 @@ public class PlayerController : Charactor_Template
     }
     void OnMove_Canceled()
     {
-        AnimSet_Move();
     }
     //↓中身ナシ
     void OnLook_Started()
@@ -171,12 +169,13 @@ public class PlayerController : Charactor_Template
         animator.SetFloat("Move", hash);
         animator.SetFloat("Speed", speed);
     }
-    void Move()
+    void Move(Charactor_Template chara_)
     {
         var velocity = cameraAngle * playerManager.MoveToVec3.normalized;
         var moveSpeed = playerManager.InputStatus[(int)PlayerManager.InputState.Sprint] ? dashSpeed : 1;
         var moveVec = new Vector2(velocity.x * moveSpeed, velocity.z * moveSpeed);
 
+        AnimSet_Move();
         Rb_Move(moveVec);
 
         if(velocity.magnitude > 0)
@@ -185,6 +184,11 @@ public class PlayerController : Charactor_Template
             var targetRot = Quaternion.Euler(0, mDisaire, 0);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, RotSpeed * Time.deltaTime);
         }
+    }
+    void CallBack(Charactor_Template chara_)
+    {
+        Rb_Stop();
+        animator.SetFloat("Move", 0);
     }
     public override void Hp_NoLife()
     {
@@ -195,12 +199,12 @@ public class PlayerController : Charactor_Template
     #region ComponentIvent
     void Start()
     {
-        Set_CharaStatus(chara_so, rb, animator, anim_SO, Move);
+        Set_CharaStatus(chara_so, rb, animator, anim_SO, Move, CallBack);
         cameraAngle = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
     }
     void Update()
     {
-        CharaUpdate();
+        CharaUpdate(this);
     }
     #endregion
 }

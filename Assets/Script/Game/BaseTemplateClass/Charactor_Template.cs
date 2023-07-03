@@ -5,7 +5,7 @@
 /// </summary>
 public abstract class Charactor_Template : DynamicObject_Base
 {
-    #region キャラクタ用データ変数
+    #region キャラデータ変数
     public CharactorState_Data_SO CharaState { get; private set; }
     public float Buff_Attack { get; private set; }
     public float Buff_Difence { get; private set; }
@@ -14,13 +14,22 @@ public abstract class Charactor_Template : DynamicObject_Base
     public float Buff_Critical_Chance { get; private set; }
     #endregion
 
+    #region ターゲット
     public DynamicObject_Base Target_Attack { get; protected set; }
     public Charactor_Template Target_Surpport { get; protected set; }
+    #endregion
+
+    #region アニメーション
     public Animator CharaAnim { get; private set; }
     public AnimState_SO Anim_SO { get; private set; }
+    #endregion
 
-    public delegate void CharactorUpdate();
-    public CharactorUpdate CharaUpdate { get; private set; }
+    #region キャラアップデート
+    public delegate void CharactorEvent(Charactor_Template chara_);
+    public CharactorEvent CharaUpdate { get; private set; }
+    public CharactorEvent MoveUpdate { get; private set; }
+    public CharactorEvent MoveStopCallBack { get; private set; }
+    #endregion
 
     #region ゲッター＆定数
     public const float RotSpeed = 25;
@@ -32,6 +41,7 @@ public abstract class Charactor_Template : DynamicObject_Base
     public float Critical_Chance { get { return CharaState.Critical_Chance * Buff_Critical_Chance;} }
     #endregion
 
+    #region 戻り値関数
     public Vector3 Target_Angle(DynamicObject_Base target_)
     {
         return new Vector3(target_.Position.x - Position.x, 0, target_.Position.z - Position.z);
@@ -44,11 +54,13 @@ public abstract class Charactor_Template : DynamicObject_Base
     {
         return Target_Angle(target_).normalized;
     }
+    #endregion
 
+    #region 設定関数
     //Charactor_Dataクラスに変えてデータをセットする
     public void Set_CharaStatus(
         CharactorState_Data_SO chara_so_, Rigidbody rb_, Animator anim_, AnimState_SO anim_SO_,
-        CharactorUpdate update_)
+        CharactorEvent moveUpdate_, CharactorEvent callback_)
     {
         this.CharaState = chara_so_;
         this.Name = chara_so_.Name;
@@ -57,21 +69,41 @@ public abstract class Charactor_Template : DynamicObject_Base
         this.Hp_Max = chara_so_.Hp;
         this.CharaAnim = anim_;
         this.Anim_SO = anim_SO_;
-        this.CharaUpdate = update_;
+        this.CharaUpdate = moveUpdate_;
+        this.MoveUpdate = moveUpdate_;
+        this.MoveStopCallBack = callback_;
         //ボスの第二形態等を想定してデータセットしたときはバフをリセットさせる
         this.Buff_Reset();
     }
-    public void Set_CharaUpdate(CharactorUpdate update_)
+    public void Set_CharaUpdate(CharactorEvent update_)
     {
+        MoveStopCallBack?.Invoke(this);
         CharaUpdate = update_;
     }
+    public void Set_MoveUpdate()
+    {
+        CharaUpdate = MoveUpdate;
+    }
+    public void Add_CharaUpdate(CharactorEvent update_)
+    {
+        CharaUpdate += update_;
+    }
+    public void RemoveUpdate(CharactorEvent update_)
+    {
+        CharaUpdate -= update_;
+    }
+    #endregion
+
+    #region ダメージ関数
     //オーバーロードしないで関数名で明示する
     //完全個人製作で誰も見ないソースならオーバーロードするかも
     public void Target_Hp_Damage(float pow_, DynamicObject_Base target_)
     {
         target_.Hp_Damage(pow_);
     }
+    #endregion
 
+    #region バフ関数
     public void Buff_Reset()
     {
         this.Buff_Attack = 1.0f;
@@ -110,7 +142,13 @@ public abstract class Charactor_Template : DynamicObject_Base
     {
         this.Buff_Critical_Chance *= buff_;
     }
+    #endregion
 
+    #region 物理関数
+    public void Rb_Stop()
+    {
+        Rb.velocity = Vector3.zero;
+    }
     public void Rb_Move(Vector2 vec2_)
     {
         Rb.velocity = new Vector3(vec2_.x * CharaState.Speed, Rb.velocity.y, vec2_.y * CharaState.Speed);
@@ -127,7 +165,9 @@ public abstract class Charactor_Template : DynamicObject_Base
     {
         Rb.AddForce(vec3_ * pow_, ForceMode.Impulse);
     }
+    #endregion
 
+    #region 視点関数
     public void Look_Dir_AllReady(Vector3 dir_)
     {
         transform.rotation = Quaternion.LookRotation(dir_, Vector3.up);
@@ -168,7 +208,7 @@ public abstract class Charactor_Template : DynamicObject_Base
             }
         }
     }
-
+    #endregion
     public bool Check_Look_Angle(float angle_)
     {
         return (Vector3.Angle(this.transform.forward, Target_Angle(Target_Attack)) < angle_);
